@@ -21,14 +21,15 @@ export default class StatisticsService {
 
     return ResponseModel.findAll({
       attributes: [
-        [fn('DATE_FORMAT', col('createdAt'), dateFormat), 'period'],
-        [fn('COUNT', '*'), 'count']
+        [fn('DATE_TRUNC', period, col('createdAt')), 'date'],
+        [fn('COUNT', '*'), 'count'],
       ],
       where: { questionnaireId },
-      group: ['period'],
-      order: [[literal('period'), 'ASC']],
-      raw: true
+      group: [fn('DATE_TRUNC', period, col('createdAt'))],
+      order: [[fn('DATE_TRUNC', period, col('createdAt')), 'ASC']],
+      raw: true,
     });
+    
   };
 
   public async getQuestionAnswerStats(questionnaireId: number) {
