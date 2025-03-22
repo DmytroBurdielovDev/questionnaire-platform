@@ -84,8 +84,8 @@ export default class QuestionnaireService {
         const sortOptions: Record<SortBy, any[]> = {
             [SortBy.NameAsc]: [['name', 'ASC']],
             [SortBy.NameDesc]: [['name', 'DESC']],
-            [SortBy.Questions]: [[literal('JSON_LENGTH(questions)'), 'ASC']],
-            [SortBy.QuestionsDesc]: [[literal('JSON_LENGTH(questions)'), 'DESC']],
+            [SortBy.Questions]: [[fn('jsonb_array_length', col('questions')), 'ASC']],
+            [SortBy.QuestionsDesc]: [[fn('jsonb_array_length', col('questions')), 'DESC']],
             [SortBy.Completions]: [['completionsCount', 'ASC']],
             [SortBy.CompletionsDesc]: [['completionsCount', 'DESC']],
         };
