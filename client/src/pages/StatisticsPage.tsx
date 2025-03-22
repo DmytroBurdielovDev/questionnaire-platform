@@ -110,7 +110,7 @@ const StatisticsPage = () => {
                     outerRadius={100}
                     label
                   >
-                    {question.options.map((entry, index) => (
+                    {question.options.map((_entry, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

@@ -43,6 +43,7 @@ const SurveyPage = () => {
 
   useEffect(() => {
     if (id) fetchQuestionnaire();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const persistAnswers = (newAnswers: typeof answers) => {
