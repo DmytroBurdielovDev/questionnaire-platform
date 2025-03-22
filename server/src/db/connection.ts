@@ -4,15 +4,20 @@ import logger from "../utils/logger";
 
 dotenv.config();
 
-const sequelize = new Sequelize({
-    database: process.env.DB_NAME!,
-    username: process.env.DB_USER!,
-    password: process.env.DB_PASS!,
-    host: process.env.DB_HOST!,
-    dialect: "mysql",
-    port: Number(process.env.DB_PORT) || 3306,
-    logging: false,
-});
+export const sequelize = new Sequelize(
+    process.env.DB_NAME!,
+    process.env.DB_USER!,
+    process.env.DB_PASS!,
+    {
+      host: process.env.DB_HOST!,
+      port: Number(process.env.DB_PORT) || 5432,
+      dialect: 'postgres',
+      logging: false,
+      dialectOptions: {
+        ssl: process.env.DB_SSL === 'true' ? { require: true, rejectUnauthorized: false } : false,
+      },
+    }
+  );
 
 const dbBootstrap = async () => {
     try {

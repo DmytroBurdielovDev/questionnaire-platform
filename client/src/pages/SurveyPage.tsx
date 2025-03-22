@@ -115,7 +115,7 @@ const SurveyPage = () => {
       setSubmitted(true);
       setAnswers([]);
       localStorage.removeItem(localKey);
-    } catch (error) {
+    } catch {
       alert('❌ Failed to submit the survey. Please try again later.');
     }
   };
