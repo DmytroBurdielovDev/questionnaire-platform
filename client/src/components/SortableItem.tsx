@@ -29,25 +29,24 @@ const SortableItem: React.FC<Props> = ({ id, children }) => {
       style={style}
       className="relative bg-gray-700 p-4 rounded-lg border border-gray-600 flex items-start gap-4"
     >
-      {/* Drag handle */}
-      <div
+      <button
         {...attributes}
         {...listeners}
+        type="button"
+        aria-label="Reorder question"
         title="Drag to reorder"
-        className="text-gray-400 hover:text-white cursor-grab active:cursor-grabbing transition select-none mt-1"
+        className="text-gray-400 hover:text-white cursor-grab active:cursor-grabbing transition select-none mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
       >
-        {/* Larger SVG icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-7 h-7"
+          className="w-6 h-6"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
           <path d="M10 4H4v2h6V4zm0 14H4v2h6v-2zm0-7H4v2h6v-2zm10-7h-6v2h6V4zm0 14h-6v2h6v-2zm0-7h-6v2h6v-2z" />
         </svg>
-      </div>
+      </button>
 
-      {/* Content */}
       <div className="flex-1">{children}</div>
     </div>
   );

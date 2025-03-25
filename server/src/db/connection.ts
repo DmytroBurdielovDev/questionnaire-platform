@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import logger from "../utils/logger";
 
-dotenv.config();
+dotenv.config();process.env.DB_NAME
 
 export const sequelize = new Sequelize(
     process.env.DB_NAME!,
@@ -14,7 +14,10 @@ export const sequelize = new Sequelize(
       dialect: 'postgres',
       logging: false,
       dialectOptions: {
-        ssl: process.env.DB_SSL === 'true' ? { require: true, rejectUnauthorized: false } : false,
+        ssl: {
+          require: true,
+          rejectUnauthorized: false 
+        }
       },
     }
   );

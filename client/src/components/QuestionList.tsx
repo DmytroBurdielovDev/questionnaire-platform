@@ -24,6 +24,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
   addQuestion,
   updateQuestionType,
   updateOptions,
+  onReorder
 }) => {
   const [localQuestions, setLocalQuestions] = React.useState(questions);
 
@@ -41,9 +42,9 @@ const QuestionList: React.FC<QuestionListProps> = ({
     const newIndex = localQuestions.findIndex((q) => q.id === over.id);
     const newOrder = arrayMove(localQuestions, oldIndex, newIndex);
     setLocalQuestions(newOrder);
-    // propagate new order to parent
-    if (onEdit) {
-      newOrder.forEach((q) => onEdit(q));
+
+    if (onReorder) {
+      onReorder(newOrder);
     }
   };
 

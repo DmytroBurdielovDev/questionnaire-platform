@@ -126,7 +126,6 @@ const QuestionnaireBuilder = () => {
     }
   };
 
-  // DnD-kit setup
   const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -173,6 +172,7 @@ const QuestionnaireBuilder = () => {
               addQuestion={addQuestion}
               updateQuestionType={updateQuestionType}
               updateOptions={updateOptions}
+              onReorder={(newOrder) => setQuestions(newOrder)}
             />
           </SortableContext>
         </DndContext>

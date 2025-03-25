@@ -65,7 +65,7 @@ export interface QuestionPieData {
 export interface SurveyResponse {
   questionnaireId: number;
   answers: { questionId: number; response: string | string[] }[];
-  duration: number | null; // in seconds
+  duration: number | null;
 }
 
 export interface QuestionEditorProps {
@@ -92,9 +92,10 @@ export interface QuestionListProps {
   questions: Question[];
   onEdit: (question: Question) => void;
   onDelete: (id: number) => void;
-  addQuestion?: () => void; 
-  updateQuestionType?: (id: number, newType: Question['type']) => void; 
-  updateOptions?: (id: number, newOptions: string[]) => void; 
+  addQuestion: () => void;
+  updateQuestionType: (id: number, type: Question['type']) => void;
+  updateOptions: (id: number, newOptions: string[]) => void;
+  onReorder?: (newOrder: Question[]) => void;
 }
 
 export interface Answer {

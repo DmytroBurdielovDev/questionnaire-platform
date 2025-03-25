@@ -21,16 +21,23 @@ const QuestionItem: React.FC<Props> = ({
   return (
     <div className="bg-gray-800 p-4 rounded-lg border border-gray-600">
       {/* Question text input */}
+      <label htmlFor={`question-text-${id}`} className="sr-only">Question Text</label>
       <input
+        id={`question-text-${id}`}
+        name={`question-text-${id}`}
         type="text"
         value={text}
         onChange={(e) => onEdit({ ...question, text: e.target.value })}
         className="w-full p-2 rounded bg-gray-700 text-white border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none mb-2"
         placeholder="Enter question..."
+        autoComplete="off"
       />
 
       {/* Select question type */}
+      <label htmlFor={`question-type-${id}`} className="sr-only">Question Type</label>
       <select
+        id={`question-type-${id}`}
+        name={`question-type-${id}`}
         value={type}
         onChange={(e) => updateQuestionType(id, e.target.value as Question['type'])}
         className="w-full p-2 rounded bg-gray-700 text-white border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none mb-4"
@@ -46,7 +53,12 @@ const QuestionItem: React.FC<Props> = ({
           <p className="text-gray-300 text-sm mb-2">Options:</p>
           {options.map((opt, index) => (
             <div key={index} className="flex gap-2 mb-2">
+              <label htmlFor={`question-${id}-option-${index}`} className="sr-only">
+                Option {index + 1}
+              </label>
               <input
+                id={`question-${id}-option-${index}`}
+                name={`question-${id}-option-${index}`}
                 type="text"
                 value={opt}
                 onChange={(e) => {
@@ -56,6 +68,7 @@ const QuestionItem: React.FC<Props> = ({
                 }}
                 className="flex-1 p-2 rounded bg-gray-700 text-white border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder={`Option ${index + 1}`}
+                autoComplete="off"
               />
               <button
                 onClick={() => {
