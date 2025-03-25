@@ -75,8 +75,13 @@ export interface QuestionEditorProps {
 }
 
 export interface SortableItemProps {
-  id: number;
-  children: React.ReactNode;
+  id: string;
+  value: string;
+  onChange: (value: string) => void;
+  onDelete: () => void;
+  index: number;
+  hasError: boolean;
+  errorMessage?: string;
 }
 
 export interface Questionnaire {
@@ -88,6 +93,28 @@ export interface Questionnaire {
   questions: Question[];
 }
 
+export interface QuestionItemProps {
+  question: Question;
+  onEdit: (question: Question) => void;
+  onDelete: (id: number) => void;
+  updateQuestionType: (id: number, type: Question['type']) => void;
+  updateOptions: (id: number, newOptions: string[]) => void;
+  showValidation?: boolean;
+  error?: {
+    question?: string;
+    options?: string[];
+  };
+}
+
+export interface QuestionnaireFormProps {
+  name: string;
+  setName: (val: string) => void;
+  description: string;
+  setDescription: (val: string) => void;
+  nameError?: string | null;
+  descError?: string | null;
+  }
+
 export interface QuestionListProps {
   questions: Question[];
   onEdit: (question: Question) => void;
@@ -96,6 +123,7 @@ export interface QuestionListProps {
   updateQuestionType: (id: number, type: Question['type']) => void;
   updateOptions: (id: number, newOptions: string[]) => void;
   onReorder?: (newOrder: Question[]) => void;
+  validationErrors?: Record<number, { question?: string; options?: string[] }>;
 }
 
 export interface Answer {

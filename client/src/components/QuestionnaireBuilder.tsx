@@ -7,12 +7,12 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent 
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   verticalListSortingStrategy,
+  arrayMove,
 } from "@dnd-kit/sortable";
 
 import {
@@ -34,6 +34,9 @@ const QuestionnaireBuilder = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<number, { question?: string; options?: string[] }>>({});
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<number, { question?: string; options?: string[] }>>({});
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
@@ -50,11 +53,18 @@ const QuestionnaireBuilder = () => {
   }, [id]);
 
   const handleEdit = (updated: Question) => {
-    setQuestions((prev) => prev.map((q) => (q.id === updated.id ? updated : q)));
+    setQuestions((prev) =>
+      prev.map((q) => (q.id === updated.id ? updated : q))
+    );
   };
 
   const handleDelete = (id: number) => {
     setQuestions((prev) => prev.filter((q) => q.id !== id));
+    setErrors((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
   };
 
   const addQuestion = () => {
@@ -83,25 +93,46 @@ const QuestionnaireBuilder = () => {
     );
   };
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      alert("⚠️ Please enter a name for the questionnaire.");
-      return;
-    }
-
+  const validate = () => {
+    const newErrors: Record<number, { question?: string; options?: string[] }> = {};
+  
     if (questions.length === 0) {
-      alert("⚠️ At least one question is required.");
-      return;
+      alert("⚠️ You must add at least one question before saving.");
+      return false;
     }
+  
+    questions.forEach((q) => {
+      const questionError: { question?: string; options?: string[] } = {};
+  
+      if (!q.text.trim()) {
+        questionError.question = "Question text is required.";
+      }
+  
+      if (q.type === "single-choice" || q.type === "multiple-choice") {
+        const trimmedOptions = q.options?.map((opt) => opt.trim()) || [];
+        const filledOptions = trimmedOptions.filter((opt) => opt !== "");
+        const optionErrors = trimmedOptions.map((opt) => (opt === "" ? "Required" : ""));
+  
+        if (filledOptions.length < 2) {
+          questionError.options = optionErrors;
+        } else if (optionErrors.some(Boolean)) {
+          questionError.options = optionErrors;
+        }
+      }
+  
+      if (Object.keys(questionError).length > 0) {
+        newErrors[q.id] = questionError;
+      }
+    });
+  
+    setValidationErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
 
-    const invalid = questions.find(
-      (q) =>
-        (q.type === "single-choice" || q.type === "multiple-choice") &&
-        (!q.options || q.options.length === 0)
-    );
-
-    if (invalid) {
-      alert("⚠️ All choice questions must have at least one option.");
+  const handleSubmit = async () => {
+    if (!validate()) {
+      alert("⚠️ Please fix validation errors.");
       return;
     }
 
@@ -119,7 +150,7 @@ const QuestionnaireBuilder = () => {
         navigate("/");
       }, 1500);
     } catch (error) {
-      console.error("Failed to save questionnaire:", error);
+      console.error("❌ Failed to save questionnaire:", error);
       alert("❌ Failed to save. Please try again later.");
     } finally {
       setSaving(false);
@@ -159,11 +190,12 @@ const QuestionnaireBuilder = () => {
           setName={setName}
           description={description}
           setDescription={setDescription}
+          nameError={nameError}
         />
 
         <h3 className="text-lg text-white font-semibold mb-2">Added Questions</h3>
 
-        <DndContext collisionDetection={closestCenter} sensors={sensors} onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={questions.map((q) => q.id)} strategy={verticalListSortingStrategy}>
             <QuestionList
               questions={questions}
@@ -172,7 +204,7 @@ const QuestionnaireBuilder = () => {
               addQuestion={addQuestion}
               updateQuestionType={updateQuestionType}
               updateOptions={updateOptions}
-              onReorder={(newOrder) => setQuestions(newOrder)}
+              validationErrors={errors}
             />
           </SortableContext>
         </DndContext>
