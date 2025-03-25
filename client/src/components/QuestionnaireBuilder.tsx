@@ -34,8 +34,7 @@ const QuestionnaireBuilder = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<Record<number, { question?: string; options?: string[] }>>({});
-  const [nameError, setNameError] = useState<string | null>(null);
+  const [nameError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<number, { question?: string; options?: string[] }>>({});
   const [showToast, setShowToast] = useState(false);
 
@@ -60,11 +59,6 @@ const QuestionnaireBuilder = () => {
 
   const handleDelete = (id: number) => {
     setQuestions((prev) => prev.filter((q) => q.id !== id));
-    setErrors((prev) => {
-      const updated = { ...prev };
-      delete updated[id];
-      return updated;
-    });
   };
 
   const addQuestion = () => {
@@ -204,7 +198,7 @@ const QuestionnaireBuilder = () => {
               addQuestion={addQuestion}
               updateQuestionType={updateQuestionType}
               updateOptions={updateOptions}
-              validationErrors={errors}
+              validationErrors={validationErrors}
             />
           </SortableContext>
         </DndContext>
